@@ -1,0 +1,1465 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simple beginner guide to HTML and CSS with plain examples.">
+  <title>Learn HTML and CSS - Simple Beginner Guide</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --light: #f8fafc;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --code-bg: #f1f5f9;
+      --html: #e34f26;
+      --css: #2965f1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .skip { position: absolute; left: -999px; top: 0; background: #000; color: #fff; padding: 8px 14px; z-index: 50; }
+    .skip:focus { left: 0; }
+    a { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    /* Header */
+    .header { border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 10; }
+    .header__inner { max-width: 900px; margin: 0 auto; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .logo { font-weight: 700; color: var(--text); text-decoration: none; font-size: 1.1rem; }
+    .nav { display: flex; gap: 18px; }
+    .nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+    .nav a:hover { color: var(--text); }
+    /* Hero */
+    .hero { background: var(--light); border-bottom: 1px solid var(--border); padding: 64px 0 56px; }
+    .hero h1 { margin: 0 0 14px; font-size: 1.9rem; line-height: 1.35; font-weight: 700; }
+    .hero p { margin: 0 0 24px; color: var(--muted); max-width: 58ch; font-size: .98rem; line-height: 1.7; }
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid var(--accent); }
+    .btn--solid { background: var(--accent); color: #fff; }
+    .btn--outline { background: #fff; color: var(--accent); }
+    /* Sections - airy spacing so beginners never feel crowded */
+    .section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    .section h2 { margin: 0 0 10px; font-size: 1.45rem; font-weight: 700; line-height: 1.4; }
+    .section__intro { color: var(--muted); margin: 0 0 34px; max-width: 64ch; font-size: .98rem; line-height: 1.7; }
+    /* Tag blocks - soft cards, one idea per card */
+    .tag-block { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 44px; overflow: hidden; box-shadow: 0 1px 2px rgba(15,23,42,.05); background: #fff; }
+    .tag-block__head { padding: 22px 24px 0; }
+    .tag-block__head h3 { margin: 0 0 6px; font-size: 1.05rem; font-weight: 700; }
+    .tag-block__head h3 code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: .95rem; font-weight: 600; }
+    .tag-block__head p { margin: 0 0 16px; color: var(--muted); font-size: .92rem; line-height: 1.65; }
+    .tag-block__body { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--border); }
+    @media (min-width: 700px) { .tag-block__body { grid-template-columns: 1fr 1fr; } }
+    .code-pane { background: var(--code-bg); padding: 20px 22px; font-family: ui-monospace, Consolas, monospace; font-size: 0.88rem; line-height: 1.7; overflow-x: auto; border-bottom: 1px solid var(--border); }
+    @media (min-width: 700px) { .code-pane { border-bottom: none; border-right: 1px solid var(--border); } }
+    .code-pane pre { margin: 0; white-space: pre-wrap; }
+    .code-label, .result-label { display: block; font-family: system-ui, sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); opacity: .8; margin-bottom: 12px; }
+    .result-pane { padding: 20px 22px; background: #fff; }
+    .result-pane p, .result-pane h1, .result-pane h2, .result-pane ul { margin: 0.6em 0; }
+    .result-pane table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    .result-pane th, .result-pane td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+    .result-pane th { background: var(--light); }
+    .result-pane input { padding: 10px 12px; margin: 4px 0; border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 260px; font-size: 1rem; }
+    .result-pane button { background: var(--accent); color: #fff; border: none; padding: 10px 18px; margin: 4px 0; border-radius: 8px; font-size: 0.95rem; }
+    .note { background: transparent; border: none; border-left: 3px solid var(--border); border-radius: 0; padding: 6px 0 6px 16px; margin-top: 24px; font-size: .9rem; line-height: 1.7; color: var(--muted); }
+    .footer { padding: 40px 0 56px; color: var(--muted); font-size: 0.9rem; line-height: 1.8; text-align: center; }
+    .code-sep { display: block; margin-top: 16px; padding-top: 14px; border-top: 1px dashed #cbd5e1; }
+    /* Real IDE: textareas + live iframe preview (needs the tiny script at page bottom) */
+    .real-ide { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 44px; box-shadow: 0 1px 2px rgba(15,23,42,.05); }
+    .real-ide__grid { display: grid; grid-template-columns: 1fr; }
+    @media (min-width: 700px) { .real-ide__grid { grid-template-columns: 1fr 1fr; } }
+    .real-ide__inputs { background: var(--code-bg); padding: 18px; display: grid; gap: 14px; }
+    .real-ide__inputs label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .ide-text { width: 100%; min-height: 130px; font-family: ui-monospace, Consolas, monospace; font-size: 0.88rem; line-height: 1.7; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text); resize: vertical; }
+    .ide-text:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .real-ide__out { padding: 18px; background: #fff; }
+    .ide-frame { width: 100%; height: 260px; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+    /* Per-card mini editors: every example from HTML start runs live */
+    .mini-text { width: 100%; min-height: 76px; font-family: ui-monospace, Consolas, monospace; font-size: 0.84rem; line-height: 1.7; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: var(--text); resize: vertical; }
+    .mini-text:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .mini-frame { width: 100%; height: 170px; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+    /* Session theme: simple colors, dark editors */
+    .hero { background: linear-gradient(135deg, #fff7ed 0%, #eff6ff 55%, #f5f3ff 100%); }
+    .hero h1 .w-html { color: var(--html); }
+    .hero h1 .w-css { color: var(--css); }
+    .pills { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 24px; }
+    .pill { font-size: .78rem; font-weight: 600; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border); background: #fff; }
+    .pill--html { color: var(--html); border-color: var(--html); background: #fff7ed; }
+    .pill--css { color: var(--css); border-color: var(--css); background: #eff6ff; }
+    .sec-num { color: var(--accent); font-weight: 800; margin-right: 8px; }
+    #html .tag-block { border-top: 2px solid var(--html); }
+    #css .tag-block { border-top: 2px solid var(--css); }
+    #example .tag-block, #playground .real-ide { border-top: 2px solid var(--accent); }
+    .code-pane { background: #0f172a; }
+    .code-pane .code-label { color: #93c5fd; }
+    .code-sep { border-top-color: #334155; }
+    .mini-text { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    .mini-text:focus { outline-color: #60a5fa; }
+    .ide-text { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+    .real-ide__inputs { background: #0f172a; }
+    .real-ide__inputs label { color: #93c5fd; }
+    .label-side { font-weight: 400; text-transform: none; letter-spacing: 0; color: #cbd5e1; font-size: .78rem; }
+    .recap { background: transparent; border: none; border-left: 3px solid var(--accent); border-radius: 0; padding: 6px 0 6px 16px; margin-top: 28px; font-size: .9rem; line-height: 1.7; color: var(--muted); }
+    .hint { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+    .hint kbd, .section__intro kbd { background: var(--code-bg); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; font-family: ui-monospace, Consolas, monospace; font-size: .8rem; }
+    /* Final project (static, no live coding) — Mimi the Cat page */
+    #example .tag-block { border-top: 2px solid var(--accent); }
+    .static-pre { margin: 0; white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, Consolas, monospace; font-size: .82rem; line-height: 1.75; color: #e2e8f0; }
+    .check-list { margin: 12px 0 0; padding-left: 20px; color: var(--muted); font-size: .9rem; }
+    .check-list li { margin: 2px 0; }
+    .check-list code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: .82rem; }
+    .fp-preview { background: #fff; padding: 0; }
+    .fp-page { font-family: system-ui, Arial, sans-serif; background: #fff7ed; border-radius: 12px; padding: 28px 24px; text-align: center; }
+    .fp-photo { width: 130px; height: 130px; object-fit: cover; border: 4px solid #2563eb; border-radius: 50%; display: block; margin: 0 auto 10px; }
+    .fp-title { font-family: Georgia, serif; font-size: 28px; font-weight: 800; color: #1e293b; margin: 0 0 4px; }
+    .fp-tagline { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #e34f26; margin: 0 0 10px; }
+    .fp-text { font-size: 15px; line-height: 1.6; color: #475569; margin: 0 0 12px; }
+    .fp-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 18px 0; text-align: left; }
+    .fp-card h2 { font-size: 18px; margin: 0 0 6px; color: #1e293b; }
+    .fp-card ul, .fp-card ol { margin: 6px 0; padding-left: 22px; font-size: 14px; color: #334155; }
+    .fp-card table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 6px; }
+    .fp-card th, .fp-card td { border: 1px solid #e2e8f0; padding: 5px 8px; text-align: left; }
+    .fp-card th { background: #f8fafc; }
+    .fp-input, .fp-select, .fp-textarea { width: 100%; max-width: 260px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin: 4px 0; }
+    .fp-btn { background: #2563eb; color: #fff; border: none; border-radius: 999px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    /* Floating pen - write on any lesson, converts to typed text */
+    body.pen-open { overflow: hidden; }
+    #pen-fab { position: fixed; right: 18px; bottom: 18px; z-index: 300; width: 62px; height: 62px; border-radius: 50%; border: none; background: var(--accent); color: #fff; font: inherit; font-weight: 800; font-size: .95rem; cursor: pointer; box-shadow: 0 8px 24px rgba(37,99,235,.45); }
+    #pen-fab:hover { opacity: .92; }
+    #pen-overlay { position: fixed; inset: 0; z-index: 250; }
+    #pen-overlay[hidden] { display: none; }
+    #pen-ov-canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+    #pen-ov-bar { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: rgba(15,23,42,.94); color: #e2e8f0; padding: 10px 12px; border-radius: 12px; font-size: .85rem; }
+    #pen-ov-bar strong { margin-right: 4px; }
+    #pen-ov-bar label { display: flex; gap: 6px; align-items: center; font-size: .78rem; color: #cbd5e1; }
+    .pen-ov-btn { font: inherit; font-size: .8rem; font-weight: 700; padding: 7px 12px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #e2e8f0; cursor: pointer; }
+    .pen-ov-btn:hover { border-color: #93c5fd; color: #fff; }
+    .pen-ov-btn--go { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .pen-ov-btn[aria-pressed="true"] { background: #e34f26; border-color: #e34f26; color: #fff; }
+    #pen-ov-panel { position: absolute; left: 10px; right: 10px; bottom: 10px; background: rgba(255,255,255,.97); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+    #pen-ov-big { font-size: 2.2rem; font-weight: 800; line-height: 1.1; color: var(--text); }
+    #pen-ov-alts { display: flex; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
+    #pen-ov-alts button { font: inherit; font-weight: 700; min-width: 40px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; }
+    #pen-ov-alts button:hover { border-color: var(--accent); color: var(--accent); }
+    #pen-ov-text { min-height: 2.6em; font-size: 1.25rem; font-weight: 700; letter-spacing: .05em; line-height: 1.5; overflow-wrap: break-word; }
+    #pen-ov-status { font-size: .82rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+    #pen-ov-status strong { color: var(--text); }
+    .pen-pass { color: #15803d; font-weight: 800; }
+    .pen-fail { color: #b91c1c; font-weight: 800; }
+    #pen-overlay.pen-scroll { pointer-events: none; }
+    #pen-overlay.pen-scroll #pen-ov-bar, #pen-overlay.pen-scroll #pen-ov-panel { pointer-events: auto; }
+    /* Editor-like snippet suggestions (VS Code style) */
+    .snippet-box {
+      position: absolute; z-index: 100; min-width: 230px; max-width: 300px; max-height: 240px;
+      overflow-y: auto; background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.35); padding: 4px; display: none;
+      font-family: ui-monospace, Consolas, monospace; font-size: .85rem;
+    }
+    .snippet-item { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 9px 12px; border-radius: 6px; color: #e2e8f0; cursor: pointer; }
+    .snippet-item .s-label { font-weight: 700; }
+    .snippet-item .s-detail { color: #94a3b8; font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .snippet-item.active, .snippet-item:hover { background: #2563eb; }
+    .snippet-item.active .s-detail, .snippet-item:hover .s-detail { color: #dbeafe; }
+    .snippet-kind { display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 4px; font-size: .72rem; font-weight: 800; margin-right: 8px; flex-shrink: 0; }
+    .kind-html { background: #e34f26; color: #fff; }
+    .kind-css { background: #2965f1; color: #fff; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="header">
+    <div class="header__inner">
+      <a class="logo" href="#top">Learn HTML + CSS</a>
+      <nav class="nav" aria-label="Main">
+        <a href="#html">HTML</a>
+        <a href="#css">CSS</a>
+        <a href="#playground">Live Editor</a>
+        <a href="#example">Final Project</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="hero" id="top">
+      <div class="wrap">
+        <h1>Learn <span class="w-html">HTML</span> and <span class="w-css">CSS</span>, step by step.</h1>
+        <p>HTML builds the structure of a page. CSS changes how it looks. Edit any example below — every result runs live.</p>
+        <div class="pills">
+          <span class="pill pill--html">15 HTML tags</span>
+          <span class="pill pill--css">8 CSS lessons</span>
+          <span class="pill">24 live editors</span>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn--solid" href="#html">Start live coding</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="section" id="html" aria-labelledby="html-title">
+        <h2 id="html-title"><span class="sec-num">01</span>Common HTML tags — pure HTML</h2>
+        <p class="section__intro">No CSS here yet, only HTML. Edit any box — the result runs live. Tip: press <kbd>Ctrl</kbd> + <kbd>Space</kbd> for suggestions. Type <code>&lt;p&gt;</code> and it auto-closes to <code>&lt;p&gt;&lt;/p&gt;</code> — but singular tags like <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;input&gt;</code> never auto-close.</p>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;p&gt;</code> — Paragraph</h3>
+            <p>It is a p tag. It makes a block of text. Try changing the words.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p>It is a p tag.</p></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for paragraph example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;h1&gt;</code> — Main heading</h3>
+            <p>It is a heading tag. h1 is the biggest title. Try changing the words.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><h1>My first heading</h1></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for heading example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;a&gt;</code> — Link</h3>
+            <p>It is a link tag. href sets where it goes. Try changing the text.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><a href="https://example.com">Visit site</a></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for link example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;img&gt;</code> — Image</h3>
+            <p>It is an image tag. src is the file, alt is the description. cat.svg sits next to this page, so it loads. You can also paste a full link starting with https://</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><img src="cat.svg" alt="A cat" width="240"></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for image example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;ul&gt; &lt;li&gt;</code> — List</h3>
+            <p>ul makes bullets. Each li is one item. Try adding your own item.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><ul>
+  <li>Milk</li>
+  <li>Bread</li>
+</ul></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for list example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;button&gt; &lt;input&gt;</code> — Button and input</h3>
+            <p>Button is clickable. Input lets the user type. Try changing the button words.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><input type="text" placeholder="Your name">
+<button>Submit</button></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for button example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;div&gt;</code> — Division</h3>
+            <p>It is a div tag. It groups elements into a box. Plain for now — see it as a proper painted box in the CSS section.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><div>
+  <p>Text inside a box.</p>
+</div></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for division example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;h2&gt;</code> — Smaller heading</h3>
+            <p>h2 is smaller than h1. Use h1 once, h2 for sections. Try adding an h3.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><h2>About my shop</h2></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for smaller heading example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;strong&gt; &lt;em&gt;</code> — Bold &amp; italic</h3>
+            <p>strong = important (bold). em = stressed voice (italic). Try your own sentence.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p><strong>Never</strong> give up, <em>keep going</em>!</p></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for bold and italic example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;br&gt; &lt;hr&gt;</code> — Break &amp; line</h3>
+            <p>br jumps to the next line. hr draws a line. Neither needs a closing tag.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p>First line<br>Second line</p>
+<hr>
+<p>After the line.</p></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for break and line example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;ol&gt;</code> — Numbered list</h3>
+            <p>ol numbers each item automatically. Try adding step 3.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><ol>
+  <li>Wake up</li>
+  <li>Code</li>
+</ol></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for numbered list example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;span&gt;</code> — Small inline box</h3>
+            <p>span marks words inside a line. It looks plain now — CSS will paint it later.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p>Hello <span>friend</span>, welcome!</p></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for span example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;table&gt;</code> — Table</h3>
+            <p>tr = row, th = heading cell, td = normal cell. border="1" draws the grid.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><table border="1">
+  <tr><th>Name</th><th>Age</th></tr>
+  <tr><td>Asha</td><td>12</td></tr>
+</table></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for table example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;select&gt; &lt;textarea&gt;</code> — Dropdown &amp; big box</h3>
+            <p>select = pick one option. textarea = write many lines. Try picking Mango.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><select>
+  <option>Mango</option>
+  <option>Cake</option>
+</select>
+<textarea rows="3">Write here...</textarea></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for dropdown example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3><code>&lt;!-- --&gt;</code> — Comment</h3>
+            <p>A secret note. The browser hides it — only the paragraph shows.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><!-- This note is hidden -->
+<p>You can see me.</p></textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for comment example"></iframe></div>
+          </div>
+        </article>
+
+        <div class="recap"><strong>Recap:</strong> 15 tags, all edited live by you. Next: paint them with 8 basic CSS lessons.</div>
+
+      </section>
+
+      <section class="section" id="css" aria-labelledby="css-title">
+        <h2 id="css-title"><span class="sec-num">02</span>CSS basics</h2>
+        <p class="section__intro">Now we add CSS. Only basic properties: color, background, size, border, fonts, images. Edit the values and watch. Tip: press <kbd>Ctrl</kbd> + <kbd>Space</kbd> in any CSS box for property suggestions.</p>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Change text color and background</h3>
+            <p>Read the comments. They explain each line. Try changing navy to purple.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p>Change my color.</p></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* selector { property: value; } */
+p {
+  color: navy; /* text color */
+  background: #fef9c3; /* highlight */
+  padding: 12px; /* inside space */
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for color example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Change size and spacing</h3>
+            <p>font-size and border control layout. Try changing 32px to 48px.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><h1>Big title</h1></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* big title demo */
+h1 {
+  font-size: 32px; /* text size */
+  border-bottom: 2px solid #e2e8f0; /* line under */
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for size example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Borders &amp; rounded corners</h3>
+            <p>border draws a frame. border-radius rounds it. Try 12px → 30px.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p>Rounded box</p></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* frame + round */
+p {
+  border: 2px solid #2563eb; /* frame */
+  border-radius: 12px; /* round corners */
+  padding: 12px; /* inside space */
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" title="Live preview for border example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Margin vs padding — the box</h3>
+            <p>Every box has <strong>content → padding (inside space) → border → margin (outside space)</strong>. Yellow shows padding, blue shows margin.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p class="pad">Padding: space INSIDE my border.</p>
+<p class="gap">Margin: space OUTSIDE. I push away.</p></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* space INSIDE the border */
+.pad {
+  background: #fef9c3;
+  border: 3px solid #eab308;
+  padding: 20px; /* try 40px */
+}
+/* space OUTSIDE the border */
+.gap {
+  background: #dbeafe;
+  border: 3px solid #2563eb;
+  margin-top: 24px; /* try 48px */
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" style="height:230px" title="Live preview for margin and padding example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Images — border + border-radius</h3>
+            <p><code>border</code> draws the frame, <code>border-radius</code> rounds it. Use <code>50%</code> for a circle avatar. Try <code>24px → 50%</code>.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><img src="cat.svg" alt="A cat" class="photo">
+<img src="cat.svg" alt="A cat circle" class="avatar"></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* ===== IMAGES: frame + round corners =====
+   Goal: make photos look neat.
+   border: width style color (frame)
+   border-radius: round corners (px or %)
+   object-fit: cover = crop, don't stretch */
+
+.photo {
+  width: 220px; /* photo width */
+  border: 4px solid #2563eb; /* blue frame */
+  border-radius: 24px; /* rounded box — try 50% */
+  display: block; /* removes tiny gap under image */
+  margin-bottom: 16px; /* space below */
+}
+
+/* Circle avatar: square + 50% radius */
+.avatar {
+  width: 120px; /* keep square... */
+  height: 120px; /* ...same height for perfect circle */
+  object-fit: cover; /* crop to fill the circle */
+  border: 4px solid #e34f26; /* orange frame */
+  border-radius: 50%; /* 50% = full circle */
+  display: block;
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" style="height:280px" title="Live preview for image border and radius example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Fonts — family, size, weight &amp; more</h3>
+            <p><code>font-family</code> picks the look, <code>font-size</code> the size, <code>font-weight</code> the boldness. Try changing the families and sizes.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><h2 class="title">About our bakery</h2>
+<p class="subtitle">FRESH CAKES EVERY SUNDAY</p>
+<p class="text">Soft, sweet, and made with love. Visit us this weekend!</p></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* ===== FONTS: how text looks =====
+   font-family: which letters (always list fallbacks)
+   font-size: how big (px is easiest for beginners)
+   font-weight: how bold (400 normal, 700 bold)
+   line-height: space between lines (1.6 is comfy)
+   text-align / letter-spacing / transform = extras */
+
+.title {
+  font-family: Georgia, 'Times New Roman', serif; /* fancy heading font */
+  font-size: 30px; /* try 40px */
+  font-weight: 800; /* extra bold */
+  color: #1e293b; /* dark title */
+  margin: 0 0 4px; /* tight below */
+}
+
+.subtitle {
+  font-family: system-ui, Arial, sans-serif; /* clean body font */
+  font-size: 13px; /* small label */
+  font-weight: 700; /* bold */
+  letter-spacing: 2px; /* spaced-out letters */
+  text-transform: uppercase; /* MAKE ALL CAPS */
+  color: #e34f26; /* orange label */
+  margin: 0 0 8px;
+}
+
+.text {
+  font-family: system-ui, Arial, sans-serif; /* easy-to-read font */
+  font-size: 16px; /* normal reading size */
+  font-weight: 400; /* normal weight */
+  line-height: 1.6; /* breathing room between lines */
+  color: #475569; /* soft grey */
+  margin: 0;
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" style="height:280px" title="Live preview for font example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>Class <code>.name</code> vs ID <code>#name</code> — how CSS picks elements</h3>
+            <p><code>class</code> (dot) styles many elements together. <code>id</code> (hash) styles one unique element. Try changing the class name in both boxes together.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" spellcheck="false"><p class="hl">I use a class.</p>
+<p class="hl">I use the SAME class.</p>
+<p id="only">I use an id — just me.</p></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" spellcheck="false">/* ===== CLASS vs ID: how CSS picks elements =====
+   .hl   = CLASS (dot): paints EVERY element with class="hl"
+   #only = ID (hash): paints the ONE element with id="only"
+   Rule: class = reusable team shirt, id = unique name badge */
+
+.hl {
+  background: #dbeafe; /* blue wash for BOTH class friends */
+  border-left: 4px solid #2563eb; /* blue stripe */
+  padding: 8px; /* inside space */
+}
+
+#only {
+  background: #fef9c3; /* yellow wash, only this one */
+  border-left: 4px solid #eab308; /* gold stripe */
+  padding: 8px;
+  font-weight: 700; /* bold, only here */
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" style="height:280px" title="Live preview for class versus id example"></iframe></div>
+          </div>
+        </article>
+
+        <article class="tag-block" data-live>
+          <div class="tag-block__head">
+            <h3>About card — image + fonts + border together</h3>
+            <p>A mini “About me” card. Image on top (rounded + border), styled fonts below. This is how real pages combine everything. Try changing the name, photo radius, and colors.</p>
+          </div>
+          <div class="tag-block__body">
+            <div class="code-pane"><span class="code-label">HTML — edit me</span><textarea class="mini-text js-html" style="min-height:150px" spellcheck="false"><div class="about">
+  <img src="cat.svg" alt="Photo of Mimi the cat" class="about-photo">
+  <h2 class="about-name">About Mimi</h2>
+  <p class="about-role">CHIEF NAP OFFICER</p>
+  <p class="about-text">Loves sunbeams, snacks, and Sunday bakery runs.</p>
+  <button class="about-btn">Say hello</button>
+</div></textarea><span class="code-label code-sep">CSS — edit me</span><textarea class="mini-text js-css" style="min-height:220px" spellcheck="false">/* ===== ABOUT CARD: full mini-layout =====
+   Structure: .about = card box
+   Photo uses border + radius, text uses fonts */
+
+.about {
+  max-width: 280px; /* card width */
+  border: 1px solid #e2e8f0; /* light frame */
+  border-radius: 16px; /* round the whole card */
+  padding: 20px; /* inside space */
+  text-align: center; /* center everything */
+  font-family: system-ui, Arial, sans-serif;
+  background: #ffffff;
+}
+
+.about-photo {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border: 3px solid #2563eb; /* blue ring */
+  border-radius: 50%; /* circle photo — try 16px for square */
+  display: block;
+  margin: 0 auto 12px; /* center + space below */
+}
+
+.about-name {
+  font-family: Georgia, serif; /* fancy name */
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 2px;
+  color: #1e293b;
+}
+
+.about-role {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #64748b; /* muted grey */
+  margin: 0 0 10px;
+}
+
+.about-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0 0 14px;
+}
+
+.about-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px; /* pill button */
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 700;
+}</textarea></div>
+            <div class="result-pane"><span class="result-label">Result — live</span><iframe class="mini-frame js-frame" style="height:380px" title="Live preview for about card example"></iframe></div>
+          </div>
+        </article>
+
+        <div class="recap"><strong>Recap:</strong> selector { property: value; } — color, background, size, borders, radius, margin, padding, fonts, images, class &amp; id. Next: free playground.</div>
+      </section>
+
+      <section class="section" id="playground" aria-labelledby="play-title">
+        <h2 id="play-title"><span class="sec-num">03</span>Live editor — try it yourself</h2>
+        <p class="section__intro">Type in the HTML or CSS box. The preview updates as you type. Suggestions pop up automatically — press <kbd>Ctrl</kbd> + <kbd>Space</kbd> anytime to force them, <kbd>↑</kbd><kbd>↓</kbd> to pick, <kbd>Tab</kbd> to insert.</p>
+
+        <div class="real-ide">
+          <div class="real-ide__grid">
+            <div class="real-ide__inputs">
+              <label for="ide-html">HTML</label>
+              <textarea class="ide-text" id="ide-html" spellcheck="false">&lt;h1&gt;Hello!&lt;/h1&gt;
+&lt;p&gt;It is a p tag. Change my words.&lt;/p&gt;
+&lt;button&gt;Click me&lt;/button&gt;</textarea>
+              <label for="ide-css">CSS <span class="label-side">— try tomato → purple, 28px → 40px</span></label>
+              <textarea class="ide-text" id="ide-css" spellcheck="false">h1 {
+  color: tomato;
+  font-size: 28px;
+}
+p {
+  color: teal;
+}
+button {
+  background: #2563eb;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+}</textarea>
+              <div><button class="btn btn--outline" id="ide-reset" type="button">Reset code</button></div>
+            </div>
+            <div class="real-ide__out">
+              <span class="result-label">Preview — updates as you type</span>
+              <iframe class="ide-frame" id="ide-frame" title="Live preview of your HTML and CSS"></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="recap"><strong>Recap:</strong> you mixed tags and styles freely. Finale: study the static cat project below, then rebuild it yourself.</div>
+      </section>
+
+      <section class="section" id="example" aria-labelledby="example-title">
+        <h2 id="example-title"><span class="sec-num">04</span>Final project — Mimi the Cat (no live coding)</h2>
+        <p class="section__intro">You finished all lessons. Below is a complete cat page that uses <strong>every tag + every CSS idea</strong> you learned. Read-only on purpose — study it, then rebuild it yourself in the Live Editor above.</p>
+        <div class="tag-block">
+          <div class="tag-block__head">
+            <h3>Cat project — read the code, see the result</h3>
+            <p>No editors here. Left = full HTML, middle = full CSS, right = finished page.</p>
+          </div>
+          <div class="tag-block__body" style="grid-template-columns: 1fr;">
+            <div class="code-pane"><span class="code-label">HTML — read only (uses all 15 tags)</span><pre class="static-pre">&lt;!-- FINAL PROJECT: Mimi the Cat --&gt;
+&lt;div class="cat-page"&gt;
+  &lt;img src="cat.svg" alt="Mimi the cat" class="photo"&gt;
+  &lt;h1&gt;Meet &lt;span&gt;Mimi&lt;/span&gt; the Cat&lt;/h1&gt;
+  &lt;p class="tagline"&gt;CHIEF NAP OFFICER&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Never&lt;/strong&gt; miss nap time, &lt;em&gt;always&lt;/em&gt; chase sunbeams!&lt;/p&gt;
+  &lt;a href="https://example.com"&gt;Visit Mimi's page&lt;/a&gt;
+  &lt;br&gt;
+  &lt;hr&gt;
+  &lt;h2&gt;Favourite snacks&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Milk&lt;/li&gt;
+    &lt;li&gt;Fish&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;h2&gt;Daily routine&lt;/h2&gt;
+  &lt;ol&gt;
+    &lt;li&gt;Wake up&lt;/li&gt;
+    &lt;li&gt;Nap again&lt;/li&gt;
+  &lt;/ol&gt;
+  &lt;h2&gt;Snack chart&lt;/h2&gt;
+  &lt;table border="1"&gt;
+    &lt;tr&gt;&lt;th&gt;Snack&lt;/th&gt;&lt;th&gt;Rating&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Milk&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;div class="adopt-box"&gt;
+    &lt;h2&gt;Adopt Mimi&lt;/h2&gt;
+    &lt;input type="text" placeholder="Your name"&gt;
+    &lt;select&gt;
+      &lt;option&gt;Morning visit&lt;/option&gt;
+      &lt;option&gt;Evening visit&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;textarea rows="2"&gt;Why do you love cats?&lt;/textarea&gt;
+    &lt;button&gt;Say hello&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre><span class="code-label code-sep">CSS — read only (uses all 8 lessons)</span><pre class="static-pre">/* color + background + fonts + border + margin/padding + images + opacity */
+.cat-page {
+  background: #fff7ed;
+  text-align: center;
+  font-family: system-ui, Arial, sans-serif;
+  padding: 20px;
+}
+.photo {
+  width: 130px; height: 130px; object-fit: cover;
+  border: 4px solid #2563eb; border-radius: 50%;
+  display: block; margin: 0 auto 10px;
+}
+h1 {
+  font-family: Georgia, serif; font-size: 28px;
+  font-weight: 800; color: #1e293b; margin: 0;
+}
+.tagline {
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: #e34f26;
+}
+a { color: #2563eb; }
+ul, ol { background: #fff; border-radius: 8px; }
+table { background: #fff; }
+.adopt-box {
+  background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 16px; padding: 16px; margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+button {
+  background: #2563eb; color: #fff; padding: 10px 22px;
+  border: none; border-radius: 999px; cursor: pointer;
+  opacity: 1;
+}</pre></div>
+            <div class="result-pane fp-preview"><span class="result-label">Finished page — static (not editable)</span>
+              <div class="fp-page">
+                <img src="cat.svg" alt="Mimi the cat" class="fp-photo">
+                <h1 class="fp-title">Meet Mimi the Cat</h1>
+                <p class="fp-tagline">Chief nap officer</p>
+                <p class="fp-text"><strong>Never</strong> miss nap time, <em>always</em> chase <span>sunbeams</span>!</p>
+                <p class="fp-text"><a href="https://example.com">Visit Mimi's page</a></p>
+                <div class="fp-card">
+                  <h2>Favourite snacks</h2>
+                  <ul><li>Milk</li><li>Fish</li></ul>
+                  <h2>Daily routine</h2>
+                  <ol><li>Wake up</li><li>Nap again</li></ol>
+                  <h2>Snack chart</h2>
+                  <table><tr><th>Snack</th><th>Rating</th></tr><tr><td>Milk</td><td>10</td></tr></table>
+                </div>
+                <div class="fp-card">
+                  <h2>Adopt Mimi</h2>
+                  <input class="fp-input" type="text" placeholder="Your name"><br>
+                  <select class="fp-select"><option>Morning visit</option><option>Evening visit</option></select><br>
+                  <textarea class="fp-textarea" rows="2">Why do you love cats?</textarea><br>
+                  <button class="fp-btn" type="button">Say hello</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p><strong>You finished the session!</strong> 15 tags, 8 CSS lessons, 24 live editors — all learned by you.</p>
+      <p>Keep going: rebuild the cat page from memory in the Live Editor, then learn JavaScript to make buttons truly work.</p>
+    </div>
+  </footer>
+  <div class="snippet-box" id="snippet-box" role="listbox" aria-label="Code suggestions"></div>
+  <button id="pen-fab" type="button" aria-label="Open pen to write on this page">Pen</button>
+  <div id="pen-overlay" hidden>
+    <canvas id="pen-ov-canvas"></canvas>
+    <div id="pen-ov-bar" role="toolbar" aria-label="Pen tools">
+      <strong>Pen</strong>
+      <label>Color <input type="color" id="pen-ov-color" value="#2563eb"></label>
+      <label>Size <input type="range" id="pen-ov-size" min="2" max="16" value="7"></label>
+      <button class="pen-ov-btn pen-ov-btn--go" id="pen-ov-convert" type="button">Convert</button>
+      <button class="pen-ov-btn" id="pen-ov-space" type="button">Space</button>
+      <button class="pen-ov-btn" id="pen-ov-back" type="button">Bksp</button>
+      <button class="pen-ov-btn" id="pen-ov-clear" type="button">Clear pad</button>
+      <button class="pen-ov-btn" id="pen-ov-scroll" type="button" aria-pressed="false">Scroll</button>
+      <button class="pen-ov-btn" id="pen-ov-test" type="button">Test 1000</button>
+      <button class="pen-ov-btn" id="pen-ov-close" type="button">Close</button>
+    </div>
+    <div id="pen-ov-panel">
+      <span class="result-label">Typed text</span>
+      <div id="pen-ov-big">-</div>
+      <div id="pen-ov-alts" aria-label="Other guesses"></div>
+      <div id="pen-ov-text" aria-live="polite"></div>
+      <div id="pen-ov-status">Draw one block letter over any lesson. Lift the pen and it converts.</div>
+    </div>
+  </div>
+  <script src="handwriting.js"></script>
+  <script>
+    // Every example runs live: each [data-live] card renders its own
+    // HTML + CSS textareas into its own preview frame as you type.
+    (function () {
+      function renderBlock(block) {
+        var h = block.querySelector(".js-html");
+        var c = block.querySelector(".js-css");
+        var f = block.querySelector(".js-frame");
+        if (!f) return;
+        f.srcdoc = '<base target="_blank">' + "<style>" + (c ? c.value : "") + "</style>" + (h ? h.value : "");
+      }
+      document.querySelectorAll("[data-live]").forEach(function (block) {
+        block.querySelectorAll(".js-html, .js-css").forEach(function (box) {
+          box.addEventListener("input", function () { renderBlock(block); });
+        });
+        renderBlock(block);
+      });
+      // Main playground with reset button.
+      var htmlBox = document.getElementById("ide-html");
+      var cssBox = document.getElementById("ide-css");
+      var frame = document.getElementById("ide-frame");
+      var resetBtn = document.getElementById("ide-reset");
+      var defaultHtml = htmlBox ? htmlBox.value : "";
+      var defaultCss = cssBox ? cssBox.value : "";
+      function run() {
+        if (!htmlBox || !cssBox || !frame) return;
+        frame.srcdoc = '<base target="_blank">' + "<style>" + cssBox.value + "</style>" + htmlBox.value;
+      }
+      if (htmlBox) htmlBox.addEventListener("input", run);
+      if (cssBox) cssBox.addEventListener("input", run);
+      if (resetBtn) resetBtn.addEventListener("click", function () {
+        if (htmlBox) htmlBox.value = defaultHtml;
+        if (cssBox) cssBox.value = defaultCss;
+        run();
+      });
+      run();
+
+      /* ---------- Editor-like snippet suggestions (VS Code style) ---------- */
+      var HTML_SNIPPETS = [
+        { label: "p", insert: "<p>Text</p>", detail: "Paragraph" },
+        { label: "h1", insert: "<h1>Heading</h1>", detail: "Big title" },
+        { label: "h2", insert: "<h2>Heading</h2>", detail: "Section title" },
+        { label: "h3", insert: "<h3>Heading</h3>", detail: "Small title" },
+        { label: "a", insert: '<a href="https://example.com">Visit site</a>', detail: "Link" },
+        { label: "img", insert: '<img src="cat.svg" alt="A cat" width="240">', detail: "Image" },
+        { label: "img-circle", insert: '<img src="cat.svg" alt="A cat" class="avatar">', detail: "Round image" },
+        { label: "ul", insert: "<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n</ul>", detail: "Bullet list" },
+        { label: "ol", insert: "<ol>\n  <li>Step 1</li>\n  <li>Step 2</li>\n</ol>", detail: "Numbered list" },
+        { label: "li", insert: "<li>Item</li>", detail: "List item" },
+        { label: "button", insert: "<button>Click me</button>", detail: "Button" },
+        { label: "input", insert: '<input type="text" placeholder="Your name">', detail: "Text input" },
+        { label: "div", insert: "<div>\n  <p>Text inside a box.</p>\n</div>", detail: "Division box" },
+        { label: "div-about", insert: '<div class="about">\n  <img src="cat.svg" alt="Photo" class="about-photo">\n  <h2>About me</h2>\n  <p>Hello!</p>\n</div>', detail: "About card" },
+        { label: "span", insert: "<span>highlight</span>", detail: "Inline box" },
+        { label: "strong", insert: "<strong>Bold</strong>", detail: "Bold" },
+        { label: "em", insert: "<em>Italic</em>", detail: "Italic" },
+        { label: "br", insert: "<br>", detail: "Line break" },
+        { label: "hr", insert: "<hr>", detail: "Horizontal line" },
+        { label: "table", insert: '<table border="1">\n  <tr><th>Name</th><th>Age</th></tr>\n  <tr><td>Asha</td><td>12</td></tr>\n</table>', detail: "Table" },
+        { label: "select", insert: "<select>\n  <option>Mango</option>\n  <option>Cake</option>\n</select>", detail: "Dropdown" },
+        { label: "textarea", insert: '<textarea rows="3">Write here...</textarea>', detail: "Big text box" },
+        { label: "comment", insert: "<!-- Write a hidden note -->", detail: "HTML comment" }
+      ];
+      var CSS_SNIPPETS = [
+        { label: "color", insert: "color: navy;", detail: "Text color" },
+        { label: "background", insert: "background: #fef9c3;", detail: "Background" },
+        { label: "opacity", insert: "opacity: 0.5;", detail: "See-through 0-1" },
+        { label: "font-family", insert: "font-family: system-ui, Arial, sans-serif;", detail: "Font look" },
+        { label: "font-family-fancy", insert: "font-family: Georgia, 'Times New Roman', serif;", detail: "Heading font" },
+        { label: "font-size", insert: "font-size: 20px;", detail: "Text size" },
+        { label: "font-weight", insert: "font-weight: 700;", detail: "Boldness" },
+        { label: "line-height", insert: "line-height: 1.6;", detail: "Line spacing" },
+        { label: "text-align", insert: "text-align: center;", detail: "Align text" },
+        { label: "text-decoration", insert: "text-decoration: underline;", detail: "Underline" },
+        { label: "letter-spacing", insert: "letter-spacing: 2px;", detail: "Letter space" },
+        { label: "text-transform", insert: "text-transform: uppercase;", detail: "UPPERCASE" },
+        { label: "text-shadow", insert: "text-shadow: 2px 2px 4px rgba(0,0,0,0.3);", detail: "Text shadow" },
+        { label: "border", insert: "border: 2px solid #2563eb;", detail: "Frame" },
+        { label: "border-radius", insert: "border-radius: 12px;", detail: "Round corners" },
+        { label: "border-radius-circle", insert: "border-radius: 50%;", detail: "Circle" },
+        { label: "box-shadow", insert: "box-shadow: 0 4px 12px rgba(0,0,0,0.15);", detail: "Box shadow" },
+        { label: "outline", insert: "outline: 2px dashed #e34f26;", detail: "Outer line" },
+        { label: "cursor", insert: "cursor: pointer;", detail: "Hand cursor" },
+        { label: "overflow", insert: "overflow: hidden;", detail: "Hide overflow" },
+        { label: "img-round", insert: "width: 180px;\nborder: 4px solid #2563eb;\nborder-radius: 24px;\nobject-fit: cover;", detail: "Round image" },
+        { label: "padding", insert: "padding: 12px;", detail: "Inside space" },
+        { label: "margin", insert: "margin-top: 16px;", detail: "Outside space" },
+        { label: "width", insert: "width: 200px;", detail: "Width" },
+        { label: "height", insert: "height: 120px;", detail: "Height" },
+        { label: "object-fit", insert: "object-fit: cover;", detail: "Crop image" },
+        { label: "display-block", insert: "display: block;", detail: "Block layout" },
+        { label: "display-flex", insert: "display: flex;", detail: "Flex layout" },
+        { label: "max-width", insert: "max-width: 280px;", detail: "Max width" }
+      ];
+      // Value suggestions: shown AFTER you type ":"  e.g.  color: r|  opacity: 0.|
+      var CSS_COLORS = [
+        { label: "red", insert: "red;", detail: "#ef4444" },
+        { label: "tomato", insert: "tomato;", detail: "#ff6347" },
+        { label: "orange", insert: "orange;", detail: "#f97316" },
+        { label: "yellow", insert: "yellow;", detail: "#eab308" },
+        { label: "green", insert: "green;", detail: "#22c55e" },
+        { label: "teal", insert: "teal;", detail: "#14b8a6" },
+        { label: "blue", insert: "blue;", detail: "#3b82f6" },
+        { label: "navy", insert: "navy;", detail: "#1e3a8a" },
+        { label: "purple", insert: "purple;", detail: "#a855f7" },
+        { label: "pink", insert: "pink;", detail: "#ec4899" },
+        { label: "brown", insert: "brown;", detail: "#92400e" },
+        { label: "black", insert: "black;", detail: "#000000" },
+        { label: "white", insert: "white;", detail: "#ffffff" },
+        { label: "gray", insert: "gray;", detail: "#6b7280" },
+        { label: "transparent", insert: "transparent;", detail: "see-through" },
+        { label: "#2563eb", insert: "#2563eb;", detail: "blue frame" },
+        { label: "#e34f26", insert: "#e34f26;", detail: "orange html" },
+        { label: "#fef9c3", insert: "#fef9c3;", detail: "light yellow" },
+        { label: "#1e293b", insert: "#1e293b;", detail: "dark text" },
+        { label: "#64748b", insert: "#64748b;", detail: "muted grey" }
+      ];
+      var CSS_OPACITY_VALUES = [
+        { label: "0", insert: "0;", detail: "invisible" },
+        { label: "0.25", insert: "0.25;", detail: "very faint" },
+        { label: "0.5", insert: "0.5;", detail: "half see-through" },
+        { label: "0.75", insert: "0.75;", detail: "slight fade" },
+        { label: "1", insert: "1;", detail: "solid (default)" }
+      ];
+
+      var box = document.getElementById("snippet-box");
+      var activeEl = null, items = [], activeIdx = 0, currentPrefix = "", forced = false;
+
+      function isHtmlEl(el) {
+        return el.classList.contains("js-html") || el.id === "ide-html";
+      }
+      function getPrefix(el) {
+        var pos = el.selectionStart || 0;
+        var before = el.value.slice(0, pos);
+        if (isHtmlEl(el)) {
+          var m = before.match(/<([a-zA-Z!\-]*)$/);
+          if (m) return { prefix: m[1], len: m[1].length, hasBracket: true };
+          var w = before.match(/([a-zA-Z\-]+)$/);
+          if (w && !/[\n{};>]$/.test(before.slice(0, before.length - w[1].length).slice(-1))) {
+            // only suggest bare words at start or after <, space or newline
+            var ch = before.charAt(before.length - w[1].length - 1) || "\n";
+            if (ch === "<" || ch === "\n" || ch === " " || ch === ">" || ch === "") return { prefix: w[1], len: w[1].length, hasBracket: false };
+          }
+          return { prefix: "", len: 0, hasBracket: false };
+        } else {
+          // Are we typing a VALUE after ":" ?  e.g.  color: r|  opacity: 0.|
+          var lastColon = before.lastIndexOf(":");
+          var lastSemi = before.lastIndexOf(";");
+          var lastOpen = before.lastIndexOf("{");
+          var lastClose = before.lastIndexOf("}");
+          if (lastColon !== -1 && lastColon > lastSemi && lastColon > lastOpen && lastColon > lastClose) {
+            var propM = before.slice(0, lastColon).match(/([a-zA-Z\-]+)\s*$/);
+            var prop = propM ? propM[1].toLowerCase() : "";
+            var valAfter = before.slice(lastColon + 1);
+            // skip if already finished value (has closing ), ", ' after prefix?) keep simple: take trailing token
+            var vm = valAfter.match(/([#a-zA-Z0-9.\-%]+)$/);
+            if (vm) return { prefix: vm[1], len: vm[1].length, hasBracket: false, isValue: true, prop: prop };
+            return { prefix: "", len: 0, hasBracket: false, isValue: true, prop: prop };
+          }
+          var wm = before.match(/([a-zA-Z\-]+)$/);
+          if (wm) return { prefix: wm[1], len: wm[1].length, hasBracket: false, isValue: false };
+          return { prefix: "", len: 0, hasBracket: false, isValue: false };
+        }
+      }
+      function getCaretPos(el) {
+        // Mirror-div technique for textarea caret coords
+        var div = document.createElement("div");
+        var style = window.getComputedStyle(el);
+        ["fontFamily","fontSize","lineHeight","paddingTop","paddingLeft","paddingRight","paddingBottom","borderTopWidth","borderLeftWidth","whiteSpace","wordWrap","letterSpacing"].forEach(function (p) { div.style[p] = style[p]; });
+        div.style.position = "absolute"; div.style.visibility = "hidden";
+        div.style.whiteSpace = "pre-wrap"; div.style.wordWrap = "break-word";
+        div.style.width = el.offsetWidth + "px";
+        var pos = el.selectionStart || 0;
+        div.textContent = el.value.substring(0, pos);
+        var span = document.createElement("span");
+        span.textContent = "\u200b";
+        div.appendChild(span);
+        document.body.appendChild(div);
+        var elRect = el.getBoundingClientRect();
+        var spanRect = span.getBoundingClientRect();
+        var divRect = div.getBoundingClientRect();
+        document.body.removeChild(div);
+        return {
+          left: elRect.left + (spanRect.left - divRect.left) - el.scrollLeft + window.scrollX,
+          top: elRect.top + (spanRect.top - divRect.top) - el.scrollTop + window.scrollY
+        };
+      }
+      function renderList() {
+        box.innerHTML = "";
+        items.forEach(function (it, i) {
+          var d = document.createElement("div");
+          d.className = "snippet-item" + (i === activeIdx ? " active" : "");
+          d.setAttribute("role", "option");
+          var kind = isHtmlEl(activeEl) ? '<span class="snippet-kind kind-html">&lt;&gt;</span>' : '<span class="snippet-kind kind-css">#</span>';
+          d.innerHTML = '<span>' + kind + '<span class="s-label"></span></span><span class="s-detail"></span>';
+          d.querySelector(".s-label").textContent = it.label;
+          d.querySelector(".s-detail").textContent = it.detail;
+          d.addEventListener("mousedown", function (e) { e.preventDefault(); accept(i); });
+          box.appendChild(d);
+        });
+        var cur = box.children[activeIdx];
+        if (cur) cur.scrollIntoView({ block: "nearest" });
+      }
+      function open(el, list, prefix) {
+        activeEl = el; items = list; activeIdx = 0; currentPrefix = prefix;
+        renderList();
+        var p = getCaretPos(el);
+        box.style.display = "block";
+        box.style.left = Math.min(p.left, window.scrollX + window.innerWidth - 310) + "px";
+        box.style.top = (p.top + 22) + "px";
+      }
+      function close() { box.style.display = "none"; activeEl = null; items = []; forced = false; }
+      function accept(idx) {
+        if (!activeEl || !items[idx]) return;
+        var el = activeEl, snip = items[idx], info = getPrefix(el);
+        var pos = el.selectionStart || 0;
+        var start = pos - info.len;
+        var ins = snip.insert;
+        // you already typed "<" so don't make "<<h2>": eat your "<" first
+        if (info.hasBracket && ins.charAt(0) === "<") start -= 1;
+        // don't double ";;" when accepting a value that already ends with ;
+        if (ins.charAt(ins.length - 1) === ";" && el.value.charAt(pos) === ";") ins = ins.slice(0, -1);
+        el.value = el.value.slice(0, start) + ins + el.value.slice(pos);
+        el.focus();
+        // select inner word so you can type over it: <p>|Text|</p> - empty tags just leave caret after
+        var inner = ins.match(/^<([a-zA-Z][a-zA-Z0-9]*)(\s[^>]*)?>([^<>]*)<\/\1>$/);
+        if (inner && inner[3].length) {
+          var at = start + ins.indexOf(inner[3]);
+          el.setSelectionRange(at, at + inner[3].length);
+        } else {
+          el.setSelectionRange(start + ins.length, start + ins.length);
+        }
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        close();
+      }
+      function matchAll(list, prefix) {
+        var p = (prefix || "").toLowerCase();
+        if (!p) return list.slice(); // empty -> suggest ALL
+        var starts = [], contains = [], byDetail = [];
+        list.forEach(function (s) {
+          var lb = s.label.toLowerCase(), dt = (s.detail || "").toLowerCase();
+          if (lb.indexOf(p) === 0) starts.push(s);
+          else if (lb.indexOf(p) !== -1) contains.push(s);
+          else if (dt.indexOf(p) !== -1) byDetail.push(s);
+        });
+        return starts.concat(contains).concat(byDetail);
+      }
+      function update(el, force) {
+        var info = getPrefix(el);
+        // HTML -> tag snippets (all)
+        if (isHtmlEl(el)) {
+          var showH = matchAll(HTML_SNIPPETS, info.prefix);
+          if (!info.prefix && !force) { close(); return; }
+          if (!showH.length) { if (force) showH = HTML_SNIPPETS.slice(); else { close(); return; } }
+          open(el, showH, info.prefix);
+          return;
+        }
+        // CSS value context?  e.g.  color: r|  opacity: 0.|  background: #|
+        if (info.isValue) {
+          var prop = (info.prop || "");
+          var isColorProp = /color|background|border|shadow|outline/.test(prop);
+          var isOpacityProp = prop === "opacity";
+          var pool = isOpacityProp ? CSS_OPACITY_VALUES : (isColorProp ? CSS_COLORS : CSS_COLORS.concat(CSS_OPACITY_VALUES));
+          if (!info.prefix && !force) { close(); return; }
+          var showV = matchAll(pool, info.prefix);
+          if (!showV.length) { if (force) showV = pool.slice(); else { close(); return; } }
+          open(el, showV, info.prefix);
+          return;
+        }
+        // CSS property context -> suggest ALL properties
+        if (!info.prefix && !force) { close(); return; }
+        var show = matchAll(CSS_SNIPPETS, info.prefix);
+        if (!show.length) { if (force) show = CSS_SNIPPETS.slice(); else { close(); return; } }
+        open(el, show, info.prefix);
+      }
+      document.querySelectorAll(".mini-text, .ide-text").forEach(function (el) {
+        el.addEventListener("input", function () { if (box.style.display === "block" && activeEl === el) update(el, forced); else update(el, false); });
+        el.addEventListener("click", function () { close(); });
+        el.addEventListener("blur", function () { setTimeout(close, 150); });
+        el.addEventListener("keydown", function (e) {
+          if (box.style.display === "block" && activeEl === el) {
+            if (e.key === "ArrowDown") { e.preventDefault(); activeIdx = (activeIdx + 1) % items.length; renderList(); }
+            else if (e.key === "ArrowUp") { e.preventDefault(); activeIdx = (activeIdx - 1 + items.length) % items.length; renderList(); }
+            else if (e.key === "Enter" || e.key === "Tab") {
+              // Tab always accepts when open; Enter accepts unless Shift (newline)
+              if (e.key === "Tab" || !e.shiftKey) { e.preventDefault(); accept(activeIdx); }
+            }
+            else if (e.key === "Escape") { e.preventDefault(); close(); }
+          }
+          if ((e.ctrlKey || e.metaKey) && e.code === "Space") { e.preventDefault(); forced = true; update(el, true); }
+        });
+        el.addEventListener("keyup", function (e) {
+          if (e.key === "Escape") return;
+          if (["ArrowDown","ArrowUp","Enter","Tab"].indexOf(e.key) >= 0) return;
+          if (box.style.display !== "block" || activeEl !== el) update(el, false);
+        });
+      });
+      document.addEventListener("click", function (e) { if (e.target !== box && !box.contains(e.target)) { if (document.activeElement !== activeEl) close(); } });
+
+      /* ---------- Regular-editor auto-close: tags, brackets, quotes ---------- */
+      var VOID_TAGS = ["area","base","br","col","embed","hr","img","input","link","meta","param","source","track","wbr"];
+      var PAIRS = { "(": ")", "[": "]", "{": "}", '"': '"', "'": "'" };
+      var autoBusy = false;
+
+      function fireInput(el) { el.dispatchEvent(new Event("input", { bubbles: true })); }
+
+      document.querySelectorAll(".mini-text, .ide-text").forEach(function (el) {
+        var htmlMode = isHtmlEl(el);
+
+        // 1) Skip-over: if you type a closing char that is already there, jump over it
+        // 2) Auto-close pairs + smart Enter (regular editor behaviour)
+        el.addEventListener("keydown", function (e) {
+          // Let snippet popup own Enter/Tab/Arrows/Escape first
+          if (box.style.display === "block" && activeEl === el &&
+              (e.key === "Enter" || e.key === "Tab" || e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Escape")) return;
+          var pos = el.selectionStart, end = el.selectionEnd, val = el.value;
+          var next = val.charAt(pos), prev = val.charAt(pos - 1);
+
+          // Skip over existing closing char instead of duplicating
+          if ((e.key === ")" || e.key === "]" || e.key === "}" || e.key === '"' || e.key === "'" || e.key === ">") && next === e.key && pos === end) {
+            e.preventDefault();
+            el.setSelectionRange(pos + 1, pos + 1);
+            return;
+          }
+          // Backspace: delete empty pair together, e.g. (|) -> |
+          if (e.key === "Backspace" && pos === end && pos > 0 && pos < val.length) {
+            var pairs = { "(": ")", "[": "]", "{": "}", '"': '"', "'": "'" };
+            if (pairs[prev] && val.charAt(pos) === pairs[prev]) {
+              e.preventDefault();
+              el.value = val.slice(0, pos - 1) + val.slice(pos + 1);
+              el.setSelectionRange(pos - 1, pos - 1);
+              fireInput(el);
+              return;
+            }
+            // Delete auto-closed tag pair when empty: ><|</tag> -> >|
+            if (htmlMode && prev === ">" && val.slice(pos, pos + 2) === "</") {
+              var afterTag = val.slice(pos).match(/^<\/([a-zA-Z][a-zA-Z0-9-]*)\s*>/);
+              if (afterTag) {
+                e.preventDefault();
+                el.value = val.slice(0, pos - 1) + val.slice(pos + afterTag[0].length);
+                el.setSelectionRange(pos - 1, pos - 1);
+                fireInput(el);
+                return;
+              }
+            }
+          }
+          // Auto-close pairs: ( [ { " '
+          if (PAIRS[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            // Wrap selection like a regular editor: select "hi" + press " -> "hi"
+            if (pos !== end) {
+              e.preventDefault();
+              var sel = val.slice(pos, end);
+              el.value = val.slice(0, pos) + e.key + sel + PAIRS[e.key] + val.slice(end);
+              el.setSelectionRange(pos + 1, end + 1);
+              fireInput(el);
+              return;
+            }
+            // Don't auto-close quote in the middle of a word: it's / don't
+            if ((e.key === '"' || e.key === "'") && /[a-zA-Z0-9_]$/.test(val.slice(0, pos))) return;
+            e.preventDefault();
+            el.value = val.slice(0, pos) + e.key + PAIRS[e.key] + val.slice(pos);
+            el.setSelectionRange(pos + 1, pos + 1);
+            fireInput(el);
+            return;
+          }
+          // Smart Enter: keep indent, and expand empty middle: {|}<br>{|} or >|<br>><|
+          if (e.key === "Enter" && !e.ctrlKey && !e.metaKey) {
+            var lineStart = val.lastIndexOf("\n", pos - 1) + 1;
+            var indent = (val.slice(lineStart, pos).match(/^[ \t]*/) || [""])[0];
+            var before = val.slice(0, pos), after = val.slice(pos);
+            var isBracePair = before.charAt(before.length - 1) === "{" && after.charAt(0) === "}";
+            var isTagPair = htmlMode && before.charAt(before.length - 1) === ">" && after.slice(0, 2) === "</";
+            if (isBracePair || isTagPair) {
+              e.preventDefault();
+              var inner = indent + "  ";
+              el.value = before + "\n" + inner + "\n" + indent + after;
+              el.setSelectionRange(before.length + 1 + inner.length, before.length + 1 + inner.length);
+              fireInput(el);
+              return;
+            }
+          }
+        });
+
+        // 3) Auto-close HTML tags on ">" — but NEVER for singular (void) tags
+        el.addEventListener("input", function (e) {
+          if (autoBusy || !htmlMode) return;
+          if (e.inputType !== "insertText" || (e.data !== ">" && e.data !== "/")) return;
+          var pos = el.selectionStart, val = el.value;
+
+          // Case A: just typed ">" to finish an opening tag -> insert </tag>
+          if (e.data === ">") {
+            var before = val.slice(0, pos);
+            var m = before.match(/<([a-zA-Z][a-zA-Z0-9-]*)((?:\s[^<>"']+|"[^"]*"|'[^']*')*)>$/);
+            if (!m) return;
+            var tag = m[1], lower = tag.toLowerCase();
+            var full = m[0];
+            if (full.charAt(1) === "/") return;      // it was a closing tag </p>
+            if (full.charAt(0) === "!" || lower.charAt(0) === "!") return; // <!-- -->
+            if (/\/>$/.test(full)) return;          // self-closed <br/>
+            if (VOID_TAGS.indexOf(lower) !== -1) return; // singular: img br hr input...
+            var after = val.slice(pos);
+            if (new RegExp("^</" + lower + "\\s*>").test(after)) return; // already closed
+            autoBusy = true;
+            var closing = "</" + tag + ">";
+            el.value = val.slice(0, pos) + closing + val.slice(pos);
+            el.setSelectionRange(pos, pos);
+            fireInput(el);
+            autoBusy = false;
+            return;
+          }
+
+          // Case B: just typed "/" right after "<" (making "</") -> complete tag name
+          if (e.data === "/") {
+            var b2 = val.slice(0, pos);
+            if (!/<\/$/.test(b2)) return;
+            // find last unclosed opening tag with a simple stack
+            var src = val.slice(0, pos - 2);
+            var re = /<\/?([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^<>]*)?\/?>/g, mm, stack = [];
+            while ((mm = re.exec(src))) {
+              var t = mm[0], name = mm[1].toLowerCase();
+              if (t.charAt(1) === "/") { // closing: pop matching
+                for (var i = stack.length - 1; i >= 0; i--) { if (stack[i].toLowerCase() === name) { stack.splice(i, 1); break; } }
+              } else if (/\/>$/.test(t) || VOID_TAGS.indexOf(name) !== -1 || name.charAt(0) === "!") {
+                continue; // singular / self-closed: ignore
+              } else stack.push(mm[1]);
+            }
+            if (!stack.length) return;
+            var need = stack[stack.length - 1];
+            autoBusy = true;
+            el.value = val.slice(0, pos) + need + ">" + val.slice(pos);
+            el.setSelectionRange(pos + need.length + 1, pos + need.length + 1);
+            fireInput(el);
+            autoBusy = false;
+          }
+        });
+      });
+    })();
+  </script>
+  <script>
+    // Floating pen: write over any lesson, lift pen, get typed text.
+    (function () {
+      var fab = document.getElementById("pen-fab");
+      var overlay = document.getElementById("pen-overlay");
+      var canvas = document.getElementById("pen-ov-canvas");
+      if (!fab || !overlay || !canvas) return;
+      var ENGINE = window.Handwriting || null;
+      var ctx = canvas.getContext("2d");
+      var colorBox = document.getElementById("pen-ov-color");
+      var sizeBox = document.getElementById("pen-ov-size");
+      var big = document.getElementById("pen-ov-big");
+      var altsBox = document.getElementById("pen-ov-alts");
+      var textBox = document.getElementById("pen-ov-text");
+      var statusBox = document.getElementById("pen-ov-status");
+      var scrollBtn = document.getElementById("pen-ov-scroll");
+      var strokes = [], cur = null, drawing = false, idleTimer = null;
+      var justAppended = false, pending = null;
+      var IDLE_MS = 1100, COMMIT_MS = 2500, NEAR_PX = 140;
+      var LIMIT_MS = 5000, MIN_POINTS = 10, MIN_SCORE = 0.4;
+      // Slow writers pause mid-letter: keep the last conversion un-committed
+      // for a moment so a late extra stroke rejoins it instead of
+      // becoming a second, wrong letter.
+      function bboxOf(list) {
+        var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, i, j, p;
+        for (i = 0; i < list.length; i++) {
+          for (j = 0; j < list[i].length; j++) {
+            p = list[i][j];
+            if (p[0] < x0) x0 = p[0];
+            if (p[0] > x1) x1 = p[0];
+            if (p[1] < y0) y0 = p[1];
+            if (p[1] > y1) y1 = p[1];
+          }
+        }
+        return [x0, y0, x1, y1];
+      }
+      function nearBox(p, box) {
+        return p[0] >= box[0] - NEAR_PX && p[0] <= box[2] + NEAR_PX &&
+               p[1] >= box[1] - NEAR_PX && p[1] <= box[3] + NEAR_PX;
+      }
+
+      function fit() {
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.round(window.innerWidth * dpr);
+        canvas.height = Math.round(window.innerHeight * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.lineCap = "round"; ctx.lineJoin = "round";
+        redraw();
+      }
+      function redraw() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        ctx.strokeStyle = colorBox.value;
+        ctx.lineWidth = +sizeBox.value;
+        var all = strokes.concat(cur ? [cur] : []);
+        all.forEach(function (s) {
+          if (s.length < 2) return;
+          ctx.beginPath();
+          ctx.moveTo(s[0][0], s[0][1]);
+          for (var i = 1; i < s.length; i++) ctx.lineTo(s[i][0], s[i][1]);
+          ctx.stroke();
+        });
+      }
+      function open() {
+        overlay.hidden = false;
+        document.body.classList.add("pen-open");
+        fit();
+        if (!ENGINE) {
+          statusBox.textContent = "Pen engine did not load (handwriting.js missing next to index.html). Drawing still works, converting needs that file.";
+        } else {
+          statusBox.textContent = "Draw one block letter over any lesson. Lift the pen and it converts.";
+        }
+      }
+      function close() {
+        overlay.hidden = true;
+        document.body.classList.remove("pen-open");
+        overlay.classList.remove("pen-scroll");
+        scrollBtn.setAttribute("aria-pressed", "false");
+        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+      }
+      fab.addEventListener("click", function () {
+        if (overlay.hidden) open(); else close();
+      });
+      document.getElementById("pen-ov-close").addEventListener("click", close);
+      scrollBtn.addEventListener("click", function () {
+        var on = overlay.classList.toggle("pen-scroll");
+        scrollBtn.setAttribute("aria-pressed", on ? "true" : "false");
+        document.body.classList.toggle("pen-open", !on);
+      });
+      canvas.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+        drawing = true;
+        cur = [[e.clientX, e.clientY]];
+        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+        redraw();
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!drawing) return;
+        e.preventDefault();
+        cur.push([e.clientX, e.clientY]);
+        redraw();
+      });
+      function endStroke() {
+        if (!drawing) return;
+        drawing = false;
+        if (cur && cur.length > 1) strokes.push(cur);
+        cur = null;
+        redraw();
+        if (idleTimer) clearTimeout(idleTimer);
+        statusBox.textContent = "Pen lifted - converting...";
+        idleTimer = setTimeout(convert, IDLE_MS);
+      }
+      canvas.addEventListener("pointerup", endStroke);
+      canvas.addEventListener("pointercancel", endStroke);
+      window.addEventListener("resize", function () { if (!overlay.hidden) fit(); });
+
+      function totalPoints() {
+        var n = 0, i;
+        for (i = 0; i < strokes.length; i++) n += strokes[i].length;
+        return n;
+      }
+      function convert() {
+        idleTimer = null;
+        if (!strokes.length) return;
+        if (totalPoints() < MIN_POINTS) {
+          statusBox.textContent = "Too small - draw a bigger letter.";
+          strokes = []; redraw();
+          return;
+        }
+        var r = window.Handwriting.recognize(strokes);
+        strokes = []; redraw();
+        justAppended = false;
+        altsBox.innerHTML = "";
+        if (r.score >= MIN_SCORE && r.ms < LIMIT_MS) {
+          textBox.textContent += r.name;
+          justAppended = true;
+          big.textContent = r.name;
+          statusBox.innerHTML = "Got <strong>" + r.name + "</strong> in <strong>" + r.ms.toFixed(2) + " ms</strong> (limit 5000 ms). Tap a guess below if wrong:";
+        } else {
+          big.textContent = "?";
+          statusBox.textContent = "Unsure (best: " + r.name + "). Draw bigger, or tap a guess to use it:";
+        }
+        r.ranked.slice(0, 3).forEach(function (cand) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = cand.name + " " + Math.round(cand.score * 100) + "%";
+          b.addEventListener("click", function () {
+            if (justAppended && textBox.textContent.length) {
+              textBox.textContent = textBox.textContent.slice(0, -1) + cand.name;
+            } else {
+              textBox.textContent += cand.name;
+              justAppended = true;
+            }
+            big.textContent = cand.name;
+          });
+          altsBox.appendChild(b);
+        });
+      }
+      document.getElementById("pen-ov-convert").addEventListener("click", function () {
+        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+        convert();
+      });
+      document.getElementById("pen-ov-space").addEventListener("click", function () {
+        textBox.textContent += " "; justAppended = false;
+      });
+      document.getElementById("pen-ov-back").addEventListener("click", function () {
+        textBox.textContent = textBox.textContent.slice(0, -1); justAppended = false;
+      });
+      document.getElementById("pen-ov-clear").addEventListener("click", function () {
+        strokes = []; cur = null;
+        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+        redraw();
+        statusBox.textContent = "Pad cleared - draw a letter.";
+      });
+      document.getElementById("pen-ov-test").addEventListener("click", function () {
+        var btn = this;
+        btn.disabled = true;
+        statusBox.textContent = "Testing 1000 letters...";
+        setTimeout(function () {
+          try {
+            var b = window.Handwriting.benchmark(1000);
+            var st = window.Handwriting.selfTest();
+            var pass = b.totalMs < LIMIT_MS && st.accuracy >= 0.85;
+            statusBox.innerHTML = "1000 letters in <strong>" + b.totalMs.toFixed(1) + " ms</strong> (limit 5000). Accuracy <strong>" + Math.round(st.accuracy * 100) + "%</strong>. " + (pass ? "<span class='pen-pass'>PASS</span>" : "<span class='pen-fail'>FAIL</span>");
+          } catch (err) {
+            statusBox.innerHTML = "<span class='pen-fail'>FAIL</span>";
+          }
+          btn.disabled = false;
+        }, 30);
+      });
+      colorBox.addEventListener("input", redraw);
+    })();
+  </script>
+</body>
+</html>

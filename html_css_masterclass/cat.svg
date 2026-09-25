@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+  <rect width="320" height="200" rx="16" fill="#ffedd5"/>
+  <circle cx="160" cy="105" r="62" fill="#fdba74"/>
+  <polygon points="112,62 104,20 142,44" fill="#fdba74"/>
+  <polygon points="208,62 216,20 178,44" fill="#fdba74"/>
+  <polygon points="116,54 111,30 134,44" fill="#ff7b7b"/>
+  <polygon points="204,54 209,30 186,44" fill="#ff7b7b"/>
+  <circle cx="138" cy="98" r="7" fill="#1e293b"/>
+  <circle cx="182" cy="98" r="7" fill="#1e293b"/>
+  <circle cx="140" cy="96" r="2.5" fill="#fff"/>
+  <circle cx="184" cy="96" r="2.5" fill="#fff"/>
+  <path d="M152 116 Q160 124 168 116" stroke="#1e293b" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <line x1="100" y1="110" x2="130" y2="112" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="100" y1="124" x2="130" y2="122" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="220" y1="110" x2="190" y2="112" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="220" y1="124" x2="190" y2="122" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+  <text x="160" y="185" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#9a3412">My cat</text>
+</svg>
