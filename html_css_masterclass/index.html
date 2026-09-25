@@ -142,20 +142,11 @@
     #pen-ov-bar label { display: flex; gap: 6px; align-items: center; font-size: .78rem; color: #cbd5e1; }
     .pen-ov-btn { font: inherit; font-size: .8rem; font-weight: 700; padding: 7px 12px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #e2e8f0; cursor: pointer; }
     .pen-ov-btn:hover { border-color: #93c5fd; color: #fff; }
-    .pen-ov-btn--go { background: var(--accent); border-color: var(--accent); color: #fff; }
     .pen-ov-btn[aria-pressed="true"] { background: #e34f26; border-color: #e34f26; color: #fff; }
-    #pen-ov-panel { position: absolute; left: 10px; right: 10px; bottom: 10px; background: rgba(255,255,255,.97); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
-    #pen-ov-big { font-size: 2.2rem; font-weight: 800; line-height: 1.1; color: var(--text); }
-    #pen-ov-alts { display: flex; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
-    #pen-ov-alts button { font: inherit; font-weight: 700; min-width: 40px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; }
-    #pen-ov-alts button:hover { border-color: var(--accent); color: var(--accent); }
-    #pen-ov-text { min-height: 2.6em; font-size: 1.25rem; font-weight: 700; letter-spacing: .05em; line-height: 1.5; overflow-wrap: break-word; }
-    #pen-ov-status { font-size: .82rem; color: var(--muted); margin-top: 6px; line-height: 1.6; }
-    #pen-ov-status strong { color: var(--text); }
-    .pen-pass { color: #15803d; font-weight: 800; }
-    .pen-fail { color: #b91c1c; font-weight: 800; }
+    #pen-overlay.pen-text #pen-ov-canvas { cursor: text; }
+    #pen-ov-editor { position: absolute; z-index: 5; min-width: 140px; max-width: 70vw; font: inherit; line-height: 1.4; padding: 6px 8px; border: 2px dashed var(--accent); border-radius: 8px; background: rgba(255,255,255,.95); resize: none; overflow: hidden; }
     #pen-overlay.pen-scroll { pointer-events: none; }
-    #pen-overlay.pen-scroll #pen-ov-bar, #pen-overlay.pen-scroll #pen-ov-panel { pointer-events: auto; }
+    #pen-overlay.pen-scroll #pen-ov-bar { pointer-events: auto; }
     /* Editor-like snippet suggestions (VS Code style) */
     .snippet-box {
       position: absolute; z-index: 100; min-width: 230px; max-width: 300px; max-height: 240px;
@@ -813,23 +804,12 @@ button {
       <strong>Pen</strong>
       <label>Color <input type="color" id="pen-ov-color" value="#2563eb"></label>
       <label>Size <input type="range" id="pen-ov-size" min="2" max="16" value="7"></label>
-      <button class="pen-ov-btn pen-ov-btn--go" id="pen-ov-convert" type="button">Convert</button>
-      <button class="pen-ov-btn" id="pen-ov-space" type="button">Space</button>
-      <button class="pen-ov-btn" id="pen-ov-back" type="button">Bksp</button>
-      <button class="pen-ov-btn" id="pen-ov-clear" type="button">Clear pad</button>
+      <button class="pen-ov-btn" id="pen-ov-textbtn" type="button" aria-pressed="false" title="Type mode, or just double-tap anywhere">Text</button>
+      <button class="pen-ov-btn" id="pen-ov-clear" type="button">Clear</button>
       <button class="pen-ov-btn" id="pen-ov-scroll" type="button" aria-pressed="false">Scroll</button>
-      <button class="pen-ov-btn" id="pen-ov-test" type="button">Test 1000</button>
       <button class="pen-ov-btn" id="pen-ov-close" type="button">Close</button>
     </div>
-    <div id="pen-ov-panel">
-      <span class="result-label">Typed text</span>
-      <div id="pen-ov-big">-</div>
-      <div id="pen-ov-alts" aria-label="Other guesses"></div>
-      <div id="pen-ov-text" aria-live="polite"></div>
-      <div id="pen-ov-status">Draw one block letter over any lesson. Lift the pen and it converts.</div>
-    </div>
   </div>
-  <script src="handwriting.js"></script>
   <script>
     // Every example runs live: each [data-live] card renders its own
     // HTML + CSS textareas into its own preview frame as you type.
@@ -1269,45 +1249,21 @@ button {
     })();
   </script>
   <script>
-    // Floating pen: write over any lesson, lift pen, get typed text.
+    // Floating pen: click Pen, a canvas opens. Draw, or double-tap to type.
     (function () {
       var fab = document.getElementById("pen-fab");
       var overlay = document.getElementById("pen-overlay");
       var canvas = document.getElementById("pen-ov-canvas");
       if (!fab || !overlay || !canvas) return;
-      var ENGINE = window.Handwriting || null;
       var ctx = canvas.getContext("2d");
       var colorBox = document.getElementById("pen-ov-color");
       var sizeBox = document.getElementById("pen-ov-size");
-      var big = document.getElementById("pen-ov-big");
-      var altsBox = document.getElementById("pen-ov-alts");
-      var textBox = document.getElementById("pen-ov-text");
-      var statusBox = document.getElementById("pen-ov-status");
       var scrollBtn = document.getElementById("pen-ov-scroll");
-      var strokes = [], cur = null, drawing = false, idleTimer = null;
-      var justAppended = false, pending = null;
-      var IDLE_MS = 1100, COMMIT_MS = 2500, NEAR_PX = 140;
-      var LIMIT_MS = 5000, MIN_POINTS = 10, MIN_SCORE = 0.4;
-      // Slow writers pause mid-letter: keep the last conversion un-committed
-      // for a moment so a late extra stroke rejoins it instead of
-      // becoming a second, wrong letter.
-      function bboxOf(list) {
-        var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, i, j, p;
-        for (i = 0; i < list.length; i++) {
-          for (j = 0; j < list[i].length; j++) {
-            p = list[i][j];
-            if (p[0] < x0) x0 = p[0];
-            if (p[0] > x1) x1 = p[0];
-            if (p[1] < y0) y0 = p[1];
-            if (p[1] > y1) y1 = p[1];
-          }
-        }
-        return [x0, y0, x1, y1];
-      }
-      function nearBox(p, box) {
-        return p[0] >= box[0] - NEAR_PX && p[0] <= box[2] + NEAR_PX &&
-               p[1] >= box[1] - NEAR_PX && p[1] <= box[3] + NEAR_PX;
-      }
+      var textBtn = document.getElementById("pen-ov-textbtn");
+      var strokes = [], cur = null, drawing = false;
+      var texts = [], editor = null, mode = "draw";
+      var lastTap = { t: 0, x: 0, y: 0 }, strokeTimes = [];
+      function textPx() { return (+sizeBox.value) * 4; }
 
       function fit() {
         var dpr = window.devicePixelRatio || 1;
@@ -1322,30 +1278,75 @@ button {
         ctx.strokeStyle = colorBox.value;
         ctx.lineWidth = +sizeBox.value;
         var all = strokes.concat(cur ? [cur] : []);
-        all.forEach(function (s) {
-          if (s.length < 2) return;
+        all.forEach(function (stroke) {
+          if (stroke.length < 2) return;
           ctx.beginPath();
-          ctx.moveTo(s[0][0], s[0][1]);
-          for (var i = 1; i < s.length; i++) ctx.lineTo(s[i][0], s[i][1]);
+          ctx.moveTo(stroke[0][0], stroke[0][1]);
+          for (var i = 1; i < stroke.length; i++) ctx.lineTo(stroke[i][0], stroke[i][1]);
           ctx.stroke();
+        });
+        ctx.textBaseline = "top";
+        texts.forEach(function (t) {
+          ctx.fillStyle = t.color;
+          ctx.font = "600 " + t.px + "px system-ui, sans-serif";
+          for (var k = 0; k < t.lines.length; k++) ctx.fillText(t.lines[k], t.x, t.y + k * t.px * 1.3);
         });
       }
       function open() {
         overlay.hidden = false;
         document.body.classList.add("pen-open");
         fit();
-        if (!ENGINE) {
-          statusBox.textContent = "Pen engine did not load (handwriting.js missing next to index.html). Drawing still works, converting needs that file.";
-        } else {
-          statusBox.textContent = "Draw one block letter over any lesson. Lift the pen and it converts.";
-        }
       }
       function close() {
+        closeEditor(false);
+        setMode("draw");
         overlay.hidden = true;
         document.body.classList.remove("pen-open");
         overlay.classList.remove("pen-scroll");
         scrollBtn.setAttribute("aria-pressed", "false");
-        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+        drawing = false;
+        cur = null;
+      }
+      function setMode(m) {
+        mode = m;
+        var isText = (m === "text");
+        if (textBtn) textBtn.setAttribute("aria-pressed", isText ? "true" : "false");
+        overlay.classList.toggle("pen-text", isText);
+      }
+      function openEditorAt(x, y) {
+        closeEditor(true);
+        editor = document.createElement("textarea");
+        editor.id = "pen-ov-editor";
+        editor.rows = 2;
+        editor.setAttribute("aria-label", "Type text to stamp on the page. Enter to place, Escape to cancel.");
+        editor.dataset.x = x;
+        editor.dataset.y = y;
+        editor.dataset.color = colorBox.value;
+        editor.dataset.px = textPx();
+        editor.style.left = x + "px";
+        editor.style.top = y + "px";
+        editor.style.color = colorBox.value;
+        editor.style.fontSize = textPx() + "px";
+        overlay.appendChild(editor);
+        editor.focus();
+        editor.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); closeEditor(true); }
+          else if (e.key === "Escape") { e.preventDefault(); closeEditor(false); }
+        });
+        editor.addEventListener("blur", function () {
+          setTimeout(function () { closeEditor(true); }, 0);
+        });
+      }
+      function closeEditor(commit) {
+        if (!editor) return;
+        var v = editor.value, ex = +editor.dataset.x, ey = +editor.dataset.y;
+        var ecol = editor.dataset.color, epx = +editor.dataset.px;
+        editor.remove();
+        editor = null;
+        if (commit && v.trim()) {
+          texts.push({ x: ex, y: ey, color: ecol, px: epx, lines: v.split("\n") });
+          redraw();
+        }
       }
       fab.addEventListener("click", function () {
         if (overlay.hidden) open(); else close();
@@ -1355,13 +1356,44 @@ button {
         var on = overlay.classList.toggle("pen-scroll");
         scrollBtn.setAttribute("aria-pressed", on ? "true" : "false");
         document.body.classList.toggle("pen-open", !on);
+        if (on) { closeEditor(true); setMode("draw"); }
+      });
+      if (textBtn) textBtn.addEventListener("click", function () {
+        if (mode === "text") {
+          closeEditor(true);
+          setMode("draw");
+        } else {
+          if (overlay.classList.contains("pen-scroll")) {
+            overlay.classList.remove("pen-scroll");
+            scrollBtn.setAttribute("aria-pressed", "false");
+            document.body.classList.add("pen-open");
+          }
+          setMode("text");
+        }
       });
       canvas.addEventListener("pointerdown", function (e) {
         e.preventDefault();
+        if (mode === "text") {
+          openEditorAt(e.clientX, e.clientY);
+          return;
+        }
+        var nowT = Date.now();
+        var dx = e.clientX - lastTap.x, dy = e.clientY - lastTap.y;
+        if (nowT - lastTap.t < 350 && dx * dx + dy * dy < 28 * 28) {
+          // double-tap: drop only the first tap's dot, open the text box here
+          lastTap.t = 0;
+          if (strokes.length && (nowT - strokeTimes[strokeTimes.length - 1] < 600) && strokes[strokes.length - 1].length < 8) {
+            strokes.pop();
+            strokeTimes.pop();
+          }
+          openEditorAt(e.clientX, e.clientY);
+          redraw();
+          return;
+        }
+        lastTap = { t: nowT, x: e.clientX, y: e.clientY };
         try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
         drawing = true;
         cur = [[e.clientX, e.clientY]];
-        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
         redraw();
       });
       canvas.addEventListener("pointermove", function (e) {
@@ -1373,92 +1405,27 @@ button {
       function endStroke() {
         if (!drawing) return;
         drawing = false;
-        if (cur && cur.length > 1) strokes.push(cur);
+        if (cur && cur.length > 1) { strokes.push(cur); strokeTimes.push(Date.now()); }
         cur = null;
         redraw();
-        if (idleTimer) clearTimeout(idleTimer);
-        statusBox.textContent = "Pen lifted - converting...";
-        idleTimer = setTimeout(convert, IDLE_MS);
       }
       canvas.addEventListener("pointerup", endStroke);
       canvas.addEventListener("pointercancel", endStroke);
       window.addEventListener("resize", function () { if (!overlay.hidden) fit(); });
-
-      function totalPoints() {
-        var n = 0, i;
-        for (i = 0; i < strokes.length; i++) n += strokes[i].length;
-        return n;
-      }
-      function convert() {
-        idleTimer = null;
-        if (!strokes.length) return;
-        if (totalPoints() < MIN_POINTS) {
-          statusBox.textContent = "Too small - draw a bigger letter.";
-          strokes = []; redraw();
-          return;
-        }
-        var r = window.Handwriting.recognize(strokes);
-        strokes = []; redraw();
-        justAppended = false;
-        altsBox.innerHTML = "";
-        if (r.score >= MIN_SCORE && r.ms < LIMIT_MS) {
-          textBox.textContent += r.name;
-          justAppended = true;
-          big.textContent = r.name;
-          statusBox.innerHTML = "Got <strong>" + r.name + "</strong> in <strong>" + r.ms.toFixed(2) + " ms</strong> (limit 5000 ms). Tap a guess below if wrong:";
-        } else {
-          big.textContent = "?";
-          statusBox.textContent = "Unsure (best: " + r.name + "). Draw bigger, or tap a guess to use it:";
-        }
-        r.ranked.slice(0, 3).forEach(function (cand) {
-          var b = document.createElement("button");
-          b.type = "button";
-          b.textContent = cand.name + " " + Math.round(cand.score * 100) + "%";
-          b.addEventListener("click", function () {
-            if (justAppended && textBox.textContent.length) {
-              textBox.textContent = textBox.textContent.slice(0, -1) + cand.name;
-            } else {
-              textBox.textContent += cand.name;
-              justAppended = true;
-            }
-            big.textContent = cand.name;
-          });
-          altsBox.appendChild(b);
-        });
-      }
-      document.getElementById("pen-ov-convert").addEventListener("click", function () {
-        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
-        convert();
-      });
-      document.getElementById("pen-ov-space").addEventListener("click", function () {
-        textBox.textContent += " "; justAppended = false;
-      });
-      document.getElementById("pen-ov-back").addEventListener("click", function () {
-        textBox.textContent = textBox.textContent.slice(0, -1); justAppended = false;
-      });
       document.getElementById("pen-ov-clear").addEventListener("click", function () {
-        strokes = []; cur = null;
-        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+        strokes = []; cur = null; texts = []; strokeTimes = [];
+        lastTap.t = 0;
+        closeEditor(false);
         redraw();
-        statusBox.textContent = "Pad cleared - draw a letter.";
       });
-      document.getElementById("pen-ov-test").addEventListener("click", function () {
-        var btn = this;
-        btn.disabled = true;
-        statusBox.textContent = "Testing 1000 letters...";
-        setTimeout(function () {
-          try {
-            var b = window.Handwriting.benchmark(1000);
-            var st = window.Handwriting.selfTest();
-            var pass = b.totalMs < LIMIT_MS && st.accuracy >= 0.85;
-            statusBox.innerHTML = "1000 letters in <strong>" + b.totalMs.toFixed(1) + " ms</strong> (limit 5000). Accuracy <strong>" + Math.round(st.accuracy * 100) + "%</strong>. " + (pass ? "<span class='pen-pass'>PASS</span>" : "<span class='pen-fail'>FAIL</span>");
-          } catch (err) {
-            statusBox.innerHTML = "<span class='pen-fail'>FAIL</span>";
-          }
-          btn.disabled = false;
-        }, 30);
+      colorBox.addEventListener("input", function () {
+        if (editor) { editor.style.color = colorBox.value; editor.dataset.color = colorBox.value; }
+        redraw();
       });
-      colorBox.addEventListener("input", redraw);
+      sizeBox.addEventListener("input", function () {
+        if (editor) { editor.style.fontSize = textPx() + "px"; editor.dataset.px = textPx(); }
+        redraw();
+      });
     })();
   </script>
 </body>
